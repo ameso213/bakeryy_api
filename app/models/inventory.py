@@ -1,17 +1,17 @@
 from datetime import datetime
 from app.extensions import db
-from flask_sqlalchemy import SQLAlchemy
+#from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
+#b = SQLAlchemy()
 
 class Inventory(db.Model):
     __tablename__ = 'inventory'
     id = db.Column(db.Integer, primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    #product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     restock_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
     location = db.Column(db.String(255), nullable=True)
-    supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.id'), nullable=True)
+    #supplier_id = db.Column(db.Integer, db.ForeignKey('supplier.id'), nullable=True)
 
     # Relationships
     product = db.relationship('Product', back_populates='inventories')

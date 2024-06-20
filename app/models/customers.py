@@ -1,8 +1,8 @@
 from app.extensions import db
 from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
+#from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
+#db = SQLAlchemy()
 
 class Customer(db.Model):
     __tablename__ = 'customers'  

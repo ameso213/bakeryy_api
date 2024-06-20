@@ -1,7 +1,7 @@
 from app.extensions import db
-from flask_sqlalchemy import SQLAlchemy
+#from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy()
+#db = SQLAlchemy()
 
 class Ingredient(db.Model):
     __tablename__ = 'ingredients'  
@@ -9,7 +9,7 @@ class Ingredient(db.Model):
     name = db.Column(db.String(100), nullable=False)
     quantity = db.Column(db.Float, nullable=False)
     unit = db.Column(db.String(20), nullable=False)
-    supplier_id = db.Column(db.Integer, db.ForeignKey('suppliers.id'), nullable=False)
+    #supplier_id = db.Column(db.Integer, db.ForeignKey('suppliers.id'), nullable=False)
 
     supplier = db.relationship('Supplier', backref='ingredients')
 

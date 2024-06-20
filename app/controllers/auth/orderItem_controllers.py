@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from app.models import  orderItem
 from app.extensions import db
 
-order_item_bp = Blueprint('order_item_bp', __name__)
+order_item_bp = Blueprint('order_item_bp', __name__, url_prefix='/api/v1/order_item_bp')
 
 @order_item_bp.route('/order_items', methods=['POST'])
 def create_order_item():

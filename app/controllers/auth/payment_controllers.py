@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.models import  payment
 from app.extensions import db
-payment_bp = Blueprint('payment_bp', __name__)
+payment_bp = Blueprint('payment_bp', __name__, url_prefix='/api/v1/payment')
 
 @payment_bp.route('/payments', methods=['POST'])
 def create_payment():

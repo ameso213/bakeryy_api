@@ -2,9 +2,9 @@ from flask import Blueprint, request, jsonify
 from app.extensions import db
 from app.models import address
 
-address_bp = Blueprint('address', __name__)
+address_bp = Blueprint('address', __name__, url_prefix='/api/v1/address')
 
-@address_bp.route('/addresses', methods=['POST'])
+@address_bp.route('/create', methods=['POST'])
 def create_address():
     data = request.get_json()
 

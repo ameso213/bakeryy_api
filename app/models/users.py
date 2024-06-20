@@ -4,7 +4,7 @@ class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    user_type = db.Column(db.String(50), nullable=False, unique=True)
+    user_type = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), nullable=False, unique=True)
     password = db.Column(db.String(200), nullable=False)
     first_name = db.Column(db.String(50), nullable=True)
@@ -23,4 +23,4 @@ class User(db.Model):
         self.user_type = user_type
 
     def get_full_name(self):
-        return f"{self.last_name} {self.first_name}"
+        return f"{self.first_name} {self.last_name}"

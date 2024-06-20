@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from app.extensions import db
 from app.models import category
 
-category_bp = Blueprint('category', __name__)
+category_bp = Blueprint('category', __name__, url_prefix='/api/v1/category')
 
 @category_bp.route('/categories', methods=['POST'])
 def create_category():

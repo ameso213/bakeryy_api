@@ -3,7 +3,7 @@ from app.extensions import db
 from app.models import customers
 from datetime import datetime
 
-customers_bp = Blueprint('customers', __name__)
+customers_bp = Blueprint('customers', __name__, url_prefix='/api/v1/customers',)
 
 @customers_bp.route('/customers', methods=['POST'])
 def create_customer():

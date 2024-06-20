@@ -3,7 +3,7 @@ from app.extensions import db
 from app.models import inventory
 from datetime import datetime
 
-inventory_bp = Blueprint('inventory', __name__)
+inventory_bp = Blueprint('inventory', __name__, url_prefix='/api/v1/invetory')
 
 @inventory_bp.route('/inventory', methods=['POST'])
 def create_inventory():

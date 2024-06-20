@@ -3,7 +3,7 @@ from app.extensions import db
 from app.models import products
 from datetime import datetime
 
-products_bp = Blueprint('products', __name__)
+products_bp = Blueprint('products', __name__, url_prefix='/api/v1/products')
 
 @products_bp.route('/products', methods=['POST'])
 def create_product():

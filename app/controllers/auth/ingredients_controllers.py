@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from app.extensions import db
 from app.models import ingredients
 
-ingredients_bp = Blueprint('ingredients', __name__)
+ingredients_bp = Blueprint('ingredients', __name__, url_prefix='/api/v1/ingredients')
 
 @ingredients_bp.route('/ingredients', methods=['POST'])
 def create_ingredient():

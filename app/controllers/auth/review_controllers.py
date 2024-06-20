@@ -3,7 +3,7 @@ from app.extensions import db
 from app.models import review, users, products
 from datetime import datetime
 
-review_bp = Blueprint('review_bp', __name__)
+review_bp = Blueprint('review_bp', __name__, url_prefix='/api/v1/review')
 
 @review_bp.route('/reviews', methods=['POST'])
 def create_review():
