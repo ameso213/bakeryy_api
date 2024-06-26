@@ -5,7 +5,7 @@ from datetime import datetime
 
 inventory_bp = Blueprint('inventory', __name__, url_prefix='/api/v1/invetory')
 
-@inventory_bp.route('/inventory', methods=['POST'])
+@inventory_bp.route('/create', methods=['POST'])
 def create_inventory():
     data = request.get_json()
 

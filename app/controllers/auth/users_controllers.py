@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.extensions import db
-from app.models import users  # Ensure correct import
-from werkzeug.security import generate_password_hash, check_password_hash
+from app.models import users  
+from werkzeug.security import generate_password_hash
 
 users_bp = Blueprint('users', __name__, url_prefix='/api/v1/auth')
 
@@ -26,7 +26,7 @@ def create_user():
 
 @users_bp.route('/users', methods=['GET'])
 def get_users():
-    users = users.query.all()  # Correct model name
+    users = users.query.all()  
     users_list = []
     for user in users:
         user_data = {
@@ -42,7 +42,7 @@ def get_users():
 
 @users_bp.route('/users/<int:id>', methods=['GET'])
 def get_user(id):
-    user = users.query.get_or_404(id)  # Correct model name
+    user = users.query.get_or_404(id)  
     user_data = {
         'id': user.id,
         'first_name': user.first_name,
@@ -56,7 +56,7 @@ def get_user(id):
 @users_bp.route('/users/<int:id>', methods=['PUT'])
 def update_user(id):
     data = request.get_json()
-    user = users.query.get_or_404(id)  # Correct model name
+    user = users.query.get_or_404(id)  
 
     user.first_name = data.get('first_name', user.first_name)
     user.last_name = data.get('last_name', user.last_name)
@@ -73,7 +73,7 @@ def update_user(id):
 
 @users_bp.route('/users/<int:id>', methods=['DELETE'])
 def delete_user(id):
-    user = users.query.get_or_404(id)  # Correct model name
+    user = users.query.get_or_404(id)  
     db.session.delete(user)
     db.session.commit()
 

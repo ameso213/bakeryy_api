@@ -4,7 +4,7 @@ from app.models import ingredients
 
 ingredients_bp = Blueprint('ingredients', __name__, url_prefix='/api/v1/ingredients')
 
-@ingredients_bp.route('/ingredients', methods=['POST'])
+@ingredients_bp.route('/create', methods=['POST'])
 def create_ingredient():
     data = request.get_json()
 

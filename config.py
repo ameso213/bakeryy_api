@@ -1,3 +1,3 @@
 class Config:
           
-          SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:@localhost/bake_api'
+          SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:@localhost/bakery_api'

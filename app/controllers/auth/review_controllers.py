@@ -5,7 +5,7 @@ from datetime import datetime
 
 review_bp = Blueprint('review_bp', __name__, url_prefix='/api/v1/review')
 
-@review_bp.route('/reviews', methods=['POST'])
+@review_bp.route('/create', methods=['POST'])
 def create_review():
     data = request.get_json()
 

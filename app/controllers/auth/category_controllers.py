@@ -4,7 +4,7 @@ from app.models import category
 
 category_bp = Blueprint('category', __name__, url_prefix='/api/v1/category')
 
-@category_bp.route('/categories', methods=['POST'])
+@category_bp.route('/create', methods=['POST'])
 def create_category():
     data = request.get_json()
 

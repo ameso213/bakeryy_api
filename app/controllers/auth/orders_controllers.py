@@ -5,7 +5,7 @@ from datetime import datetime
 
 orders_bp = Blueprint('orders', __name__, url_prefix='/api/v1/orders')
 
-@orders_bp.route('/orders', methods=['POST'])
+@orders_bp.route('/create', methods=['POST'])
 def create_order():
     data = request.get_json()
 

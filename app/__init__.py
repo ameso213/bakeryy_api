@@ -46,6 +46,7 @@ def create_app():
     from app.controllers.auth.payment_controllers import payment_bp
     from app.controllers.auth.review_controllers import review_bp
     from app.controllers.auth.address_controllers import address_bp
+    from app.controllers.auth.users_controllers import users_bp
 
 
     # Register blueprints
@@ -59,7 +60,7 @@ def create_app():
     app.register_blueprint(payment_bp, url_prefix='/api')
     app.register_blueprint(address_bp, url_prefix='/api')
     app.register_blueprint(review_bp, url_prefix='/api')
-
+    app.register_blueprint(users_bp, url_prefix='/api')
     
     @app.route('/')
     def home():

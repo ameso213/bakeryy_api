@@ -4,7 +4,7 @@ from app.extensions import db
 
 order_item_bp = Blueprint('order_item_bp', __name__, url_prefix='/api/v1/order_item_bp')
 
-@order_item_bp.route('/order_items', methods=['POST'])
+@order_item_bp.route('/create', methods=['POST'])
 def create_order_item():
     data = request.get_json()
     order_id = data.get('order_id')

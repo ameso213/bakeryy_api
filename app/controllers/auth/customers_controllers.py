@@ -5,7 +5,7 @@ from datetime import datetime
 
 customers_bp = Blueprint('customers', __name__, url_prefix='/api/v1/customers',)
 
-@customers_bp.route('/customers', methods=['POST'])
+@customers_bp.route('/create', methods=['POST'])
 def create_customer():
     data = request.get_json()
 
@@ -25,7 +25,7 @@ def create_customer():
 
     return jsonify({'message': 'New customer created successfully!'}), 201
 
-@customers_bp.route('/customers', methods=['GET'])
+@customers_bp.route('/get', methods=['GET'])
 def get_customers():
     customers = customers.query.all()
     customers_list = []

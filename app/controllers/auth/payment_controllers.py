@@ -3,7 +3,7 @@ from app.models import  payment
 from app.extensions import db
 payment_bp = Blueprint('payment_bp', __name__, url_prefix='/api/v1/payment')
 
-@payment_bp.route('/payments', methods=['POST'])
+@payment_bp.route('/create', methods=['POST'])
 def create_payment():
     data = request.get_json()
     order_id = data.get('order_id')

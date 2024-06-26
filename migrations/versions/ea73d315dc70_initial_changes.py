@@ -1,8 +1,8 @@
-"""bakery_api
+"""initial changes
 
-Revision ID: 4151bab4c2fc
+Revision ID: ea73d315dc70
 Revises: 
-Create Date: 2024-06-20 11:56:17.450793
+Create Date: 2024-06-26 16:25:05.347074
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4151bab4c2fc'
+revision = 'ea73d315dc70'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -92,8 +92,7 @@ def upgrade():
     sa.Column('last_name', sa.String(length=50), nullable=True),
     sa.Column('contact', sa.String(length=20), nullable=True),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email'),
-    sa.UniqueConstraint('user_type')
+    sa.UniqueConstraint('email')
     )
     op.create_table('addresses',
     sa.Column('id', sa.Integer(), nullable=False),
