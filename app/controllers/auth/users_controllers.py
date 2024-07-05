@@ -1,11 +1,10 @@
 from flask import Blueprint, request, jsonify
+from jwt import DecodeError
 import validators
 from app.models.User import User
 from app.extensions import db, bcrypt
 from flask_jwt_extended import create_access_token, jwt_required
-#from app.status_codes import HTTP_400_BAD_REQUEST, HTTP_500_INTERNAL_SERVER_ERROR, HTTP_201_CREATED, HTTP_401_UNAUTHORIZED, HTTP_200_OK
 from http import HTTPStatus
-
 
 auth = Blueprint('auth', __name__, url_prefix='/api/v1/auth')
 
@@ -19,21 +18,18 @@ def register_user():
     user_type = data.get('user_type')
 
     if not all([first_name, last_name, email, password, user_type]):
-        return jsonify({'error': 'All fields are required'}), #HTTP_400_BAD_REQUEST
+        return jsonify({'error': 'All fields are required'}), HTTPStatus.BAD_REQUEST
 
     if len(password) < 8:
-        return jsonify({'error': 'Password is too short'}), #HTTP_400_BAD_REQUEST
+        return jsonify({'error': 'Password is too short'}), HTTPStatus.BAD_REQUEST
 
     if not validators.email(email):
-        return jsonify({'error': 'Email is not valid'}), #HTTP_400_BAD_REQUEST
-
-    if User.query.filter_by(email=email).first():
-        return jsonify({'error': 'Email address already in use'}), #HTTP_400_BAD_REQUEST
+        return jsonify({'error': 'Email is not valid'}), HTTPStatus.BAD_REQUEST
 
     try:
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        is_admin = (user_type == 'Admin')
-        new_user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password, user_type=user_type, is_admin=is_admin)
+        
+        new_user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password, user_type=user_type)
         db.session.add(new_user)
         db.session.commit()
 
@@ -42,14 +38,14 @@ def register_user():
             'user': {
                 'id': new_user.id,
                 'email': new_user.email,
-                'created_at': new_user.created_at
+                'first_name': new_user.first_name,
+                'last_name': new_user.last_name,
             }
-        }),# HTTP_201_CREATED
+        }), HTTPStatus.CREATED
 
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': 'Failed to register user. Please try again later.'}), #HTTP_500_INTERNAL_SERVER_ERROR
-
+        return jsonify({'error': 'Failed to register user. Please try again later.'}), HTTPStatus.INTERNAL_SERVER_ERROR
 
 @auth.route('/<int:id>', methods=['PUT'])
 def update_user(id):
@@ -63,27 +59,27 @@ def update_user(id):
         if 'last_name' in data:
             user.last_name = data['last_name']
         if 'password' in data:
-            user.password = data['password']  
+            user.password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
         if 'user_type' in data:
             user.user_type = data['user_type']
         if 'is_admin' in data:
             user.is_admin = data['is_admin']
-        
+
         db.session.commit()
-        return jsonify({'message': 'User updated successfully'}), 200
+        return jsonify({'message': 'User updated successfully'}), HTTPStatus.OK
     except Exception as e:
         db.session.rollback()
-        return jsonify({'error': str(e)}), 400
+        return jsonify({'error': str(e)}), HTTPStatus.BAD_REQUEST
     
 
-    
+
 @auth.route('/login', methods=['POST'])
 def login():
     email = request.json.get('email')
     password = request.json.get('password')
 
     if not email or not password:
-        return jsonify({'error': "Email and password are required"}),# HTTP_400_BAD_REQUEST
+        return jsonify({'error': "Email and password are required"}), HTTPStatus.BAD_REQUEST
 
     user = User.query.filter_by(email=email).first()
 
@@ -94,22 +90,30 @@ def login():
                 'id': user.id,
                 'email': user.email,
                 'access_token': access_token,
-                'is_admin': user.is_admin,
             },
             'message': "You have successfully logged into your account"
-        }),# HTTP_200_OK
+        }), HTTPStatus.OK
 
-    return jsonify({"error": "Invalid email or password"}), #HTTP_401_UNAUTHORIZED
+    return jsonify({"error": "Invalid email or password"}), HTTPStatus.UNAUTHORIZED
 
-@auth.route('/<int:id>', methods=['DELETE'])
-@jwt_required()
-def delete_user(id):
-    user = User.query.get_or_404(id)
+@auth.route('/users', methods=['GET'])
+def get_all_users():
     try:
-        db.session.delete(user)
-        db.session.commit()
-        return jsonify({'message': 'User deleted successfully'}), 200
-    except Exception as e:
-        db.session.rollback()
+        users = User.query.all()
+        user_list = []
+        for user in users:
+            user_data = {
+                'id': user.id,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'user_type': user.user_type,
+                'created_at': user.created_at.strftime('%Y-%m-%d %H:%M:%S') if user.created_at else None,
+                'updated_at': user.updated_at.strftime('%Y-%m-%d %H:%M:%S') if user.updated_at else None
+            }
+            user_list.append(user_data)
 
-        return jsonify({'error': str(e)}), #HTTP_500_INTERNAL_SERVER_ERROR
+        return jsonify({'users': user_list}), HTTPStatus.OK
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), HTTPStatus.INTERNAL_SERVER_ERROR
