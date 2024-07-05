@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from app.extensions import db
-from app.models import review, users, products
+from app.models import review, User, products
 from datetime import datetime
 
 review_bp = Blueprint('review_bp', __name__, url_prefix='/api/v1/review')
@@ -15,7 +15,7 @@ def create_review():
     comment = data.get('comment')
 
     # Check if user_id and product_id exist
-    user = users.query.get(user_id)
+    user = user.query.get(user_id)
     product = product.query.get(product_id)
     if not user:
         return jsonify({'error': 'User not found'}), 404
