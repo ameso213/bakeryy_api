@@ -47,7 +47,9 @@ def register_user():
         db.session.rollback()
         return jsonify({'error': 'Failed to register user. Please try again later.'}), HTTPStatus.INTERNAL_SERVER_ERROR
 
-@auth.route('/<int:id>', methods=['PUT'])
+
+
+@auth.route('/update_user/<int:id>', methods=['PUT'])
 def update_user(id):
     user = User.query.get_or_404(id)
     data = request.get_json()
@@ -62,15 +64,12 @@ def update_user(id):
             user.password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
         if 'user_type' in data:
             user.user_type = data['user_type']
-        if 'is_admin' in data:
-            user.is_admin = data['is_admin']
 
         db.session.commit()
         return jsonify({'message': 'User updated successfully'}), HTTPStatus.OK
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), HTTPStatus.BAD_REQUEST
-    
 
 
 @auth.route('/login', methods=['POST'])
@@ -117,3 +116,43 @@ def get_all_users():
 
     except Exception as e:
         return jsonify({'error': str(e)}), HTTPStatus.INTERNAL_SERVER_ERROR
+    
+
+@auth.route('/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    try:
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), HTTPStatus.NOT_FOUND
+
+        user_data = {
+            'id': user.id,
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'user_type': user.user_type,
+            'created_at': user.created_at.strftime('%Y-%m-%d %H:%M:%S') if user.created_at else None,
+            'updated_at': user.updated_at.strftime('%Y-%m-%d %H:%M:%S') if user.updated_at else None
+        }
+
+        return jsonify({'user': user_data}), HTTPStatus.OK
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), HTTPStatus.INTERNAL_SERVER_ERROR
+
+@auth.route('/delete-user/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    try:
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({'error': 'User not found'}), HTTPStatus.NOT_FOUND
+
+        db.session.delete(user)
+        db.session.commit()
+
+        return jsonify({'message': 'User deleted successfully'}), HTTPStatus.OK
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to delete user. Please try again later.'}), HTTPStatus.INTERNAL_SERVER_ERROR
+
